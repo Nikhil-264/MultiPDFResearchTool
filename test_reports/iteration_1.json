@@ -1,0 +1,46 @@
+{
+  "summary": "Full backend + frontend testing of Paperloop (Multi-PDF Research Assistant). All 16 backend pytest cases passed (health, documents CRUD, summary, sessions CRUD, messages list, chat with citations, SSE chat/stream, semantic search). Frontend flows verified end-to-end: home empty state with suggestion cards, New Chat button creates session and navigates to /c/:id, chat input streams AI response (mock), citation chip click opens PDF preview modal with snippet, right sidebar populates retrieved sources, Documents dropzone upload toasts success, semantic search returns highlighted scored chunks, settings page renders 11 settings-* controls with reset, navbar theme toggle switches dark<->light (html class flips), session list rename/delete present in left sidebar.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "DocumentsPage",
+        "issue": "After uploading a PDF via the in-page dropzone, the document grid still shows '0 indexed papers' and 'No documents match. Upload PDFs above to start asking questions.', even though the success toast fires and the left sidebar Library updates to show the new file. The DocumentsPage local documents state does not refresh after a successful upload (likely missing listDocuments() refetch in the upload onSuccess handler or a stale dependency). The Summarize button is therefore unreachable on freshly-uploaded files until a hard reload.",
+        "selector": "[data-testid^=\"document-card\"] / [data-testid^=\"summarize-btn\"]",
+        "priority": "HIGH"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_paperloop_api.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Fix DocumentsPage: re-fetch listDocuments() (or push into Zustand store) after successful upload from the in-page UploadDropzone so the document grid and 'X indexed papers' counter update without a page reload. The navbar Upload PDF and LeftSidebar Library already update correctly, so the upload itself works; only the DocumentsPage list state is stale."
+  ],
+  "critical_code_review_comments": [
+    "server.py: chat/stream endpoint persists the assistant message to MongoDB BEFORE streaming tokens — the client only sees streamed tokens, but if the stream is aborted mid-way the full assistant message is still saved. Consider building the message progressively or marking it 'partial' on abort.",
+    "server.py: random page count derivation `size // 8000 or random.randint(6,24)` is harmless for mock but misleading for small files (always falls through to random).",
+    "api.js streamChat swallows JSON parse exceptions silently (`catch (_) {}`) — fine for mock, but log in dev to surface protocol drift.",
+    "useAppStore persists only theme + settings — sessions/documents come from server; OK but DocumentsPage should subscribe to a documents slice to avoid the stale-list bug above.",
+    "All endpoints correctly exclude MongoDB _id via projection — no ObjectId leaks observed."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_paperloop_api.py (new)"
+  ],
+  "success_rate": {
+    "backend": "100% (16/16)",
+    "frontend": "~92% (1 stale-list bug on DocumentsPage; all other flows pass)"
+  },
+  "test_credentials": "N/A - app has no auth",
+  "seed_data_creation": "Backend tests upload a tiny TEST_paperloop_sample.pdf and clean it up. Frontend test uploads a test_paperloop.pdf which remains in the DB (not auto-cleaned) so subsequent runs may see it.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend is fully mocked FastAPI; pytest suite at /app/backend/tests/test_paperloop_api.py covers all endpoints. Run with: pytest /app/backend/tests/test_paperloop_api.py -v. Frontend uses data-testids: new-chat-btn, chat-input, send-chat-btn, citation-chip-{id}, document-card-{id}, summarize-btn-{id}, search-page-input, search-result-{idx}, settings-*, session-item-{id}. Theme toggle works (html.className flips dark<->light). Only outstanding bug: DocumentsPage stale grid after in-page upload. Citations only render when at least one document exists in the DB; verify by uploading first then chatting.",
+  "rca of the issue": "DocumentsPage stale grid: the in-page UploadDropzone likely fires its own onSuccess but the parent DocumentsPage relies on a useEffect-loaded local 'documents' state that is not refreshed after the upload. Navbar Upload PDF works because it lives in the global layout and probably triggers a global refetch / store update; the in-page dropzone in DocumentsPage doesn't call the same refresh path. Fix: in DocumentsPage, expose a refreshDocuments callback and pass it as onUploaded to UploadDropzone, OR move documents into Zustand and call listDocuments() in the dropzone's onSuccess."
+}

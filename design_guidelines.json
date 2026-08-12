@@ -1,0 +1,89 @@
+{
+  "theme": "Dark",
+  "archetype": "4 (Swiss & High-Contrast)",
+  "typography": {
+    "headings": "Cabinet Grotesk",
+    "body": "Satoshi",
+    "mono": "JetBrains Mono",
+    "scale": {
+      "h1": "text-4xl tracking-tighter font-medium",
+      "h2": "text-2xl tracking-tight font-medium",
+      "h3": "text-xl tracking-tight font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm text-zinc-400",
+      "overline": "text-xs uppercase tracking-[0.2em] font-bold text-zinc-500"
+    }
+  },
+  "colors": {
+    "background": "#09090B",
+    "sidebar_background": "#121214",
+    "surface": "#18181B",
+    "surface_hover": "#27272A",
+    "border": "#27272A",
+    "text_primary": "#FAFAFA",
+    "text_secondary": "#A1A1AA",
+    "accent_primary": "#FFFFFF",
+    "accent_primary_foreground": "#000000",
+    "citation_highlight": "#FFB340",
+    "citation_highlight_foreground": "#422006",
+    "danger": "#EF4444"
+  },
+  "spacing_and_layout": {
+    "philosophy": "Technical, grid-based, spacious but information-dense in sidebars. The center column breathes, the sidebars command.",
+    "app_layout": "h-screen w-screen flex overflow-hidden bg-[#09090B] text-[#FAFAFA] font-sans selection:bg-[#FFB340]/30",
+    "left_sidebar": "w-[260px] border-r border-[#27272A] bg-[#121214] flex flex-col hidden md:flex shrink-0",
+    "main_chat": "flex-1 flex flex-col h-full relative overflow-hidden",
+    "right_sidebar": "w-[320px] border-l border-[#27272A] bg-[#121214] overflow-y-auto hidden lg:flex flex-col shrink-0",
+    "chat_container": "max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1 overflow-y-auto pb-32"
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-white text-black hover:bg-zinc-200 rounded-md px-4 py-2 font-medium transition-colors shadow-sm",
+      "secondary": "bg-[#18181B] border border-[#27272A] hover:bg-[#27272A] text-white rounded-md px-4 py-2 transition-colors",
+      "ghost": "hover:bg-[#27272A] text-zinc-300 hover:text-white rounded-md transition-colors"
+    },
+    "citations": {
+      "inline": "inline-flex items-center justify-center min-w-[20px] h-5 rounded-sm bg-[#FFB340]/20 text-[#FFB340] text-xs font-mono border border-[#FFB340]/30 hover:bg-[#FFB340] hover:text-[#422006] transition-colors cursor-pointer px-1 mx-1",
+      "card": "p-4 rounded-lg bg-[#18181B] border border-[#27272A] hover:border-[#FFB340]/50 hover:shadow-[0_0_15px_rgba(255,179,64,0.05)] transition-all cursor-pointer flex flex-col gap-2 relative overflow-hidden"
+    },
+    "chat_bubbles": {
+      "user": "bg-[#18181B] border border-[#27272A] rounded-2xl rounded-tr-sm p-5 text-[#FAFAFA] max-w-[85%] self-end shadow-sm",
+      "ai": "bg-transparent p-5 text-zinc-300 max-w-full leading-relaxed"
+    },
+    "inputs": {
+      "chat_bar": "bg-[#18181B] border border-[#27272A] rounded-xl focus-within:border-zinc-500 focus-within:ring-1 focus-within:ring-zinc-500 transition-all shadow-lg"
+    }
+  },
+  "motion": {
+    "hover": "transition-all duration-200 ease-out",
+    "list_stagger": "Use Framer Motion `staggerChildren: 0.05` for chat history and document lists",
+    "fade_in_up": "initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }}"
+  },
+  "accessibility_and_testing": {
+    "data_testid_rule": "ALL interactive elements MUST include a role-based kebab-case data-testid (e.g., data-testid='new-chat-btn', data-testid='upload-pdf-dropzone', data-testid='citation-chip-1')"
+  },
+  "media": {
+    "empty_state_graphic": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/9182a353-a25f-418e-b4bc-a7c28d158099/images/3948ee20c825e9cb9c81c543311cb4d901b412652e5c08182f8b326f501752a9.png",
+      "category": "hero",
+      "description": "Abstract minimalist 3D geometric composition for the empty chat state"
+    },
+    "user_avatar": {
+      "url": "https://static.prod-images.emergentagent.com/jobs/9182a353-a25f-418e-b4bc-a7c28d158099/images/e0303b919f7e907fd8f1ba9e87f089f5ef7fb5111b6141d029116e21efaa369e.png",
+      "category": "avatar",
+      "description": "Minimalist modern user avatar placeholder"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Use React + Tailwind CSS + Framer Motion + Zustand. DO NOT use TypeScript (.tsx), use JavaScript (.jsx/.js).",
+    "App is a high-end AI research SaaS. Avoid 'cartoonish' looks, overly bright colors, or purple-violet gradients. Stick strictly to the Obsidian and Amber color palette.",
+    "Implement a 3-column layout: Left (Nav/History), Center (Chat), Right (Context/Citations).",
+    "Use Shadcn UI for standard inputs, dropdowns, dialogs, and toast notifications (Sonner). Strip away default styles to match the 'Swiss & High-Contrast' dark theme.",
+    "Implement responsive design: hide right sidebar on tablet, hide left sidebar on mobile (use hamburger menu).",
+    "Citations MUST be clickable and trigger the right sidebar to highlight or scroll to the specific reference.",
+    "Make sure to include 'data-testid' on all buttons, links, and forms for testing.",
+    "Include 'lucide-react' for crisp SVG icons.",
+    "Ensure the Chat UI input bar supports multi-line text and handles Enter to submit (Shift+Enter for new line).",
+    "For rendering Markdown and Code Blocks in AI responses, use libraries like 'react-markdown' and 'react-syntax-highlighter'."
+  ]
+}
